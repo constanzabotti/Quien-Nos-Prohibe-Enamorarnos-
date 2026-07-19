@@ -1,0 +1,298 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: API specification for ¿Quién nos prohíbe enamorarnos?
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: letters
+    description: Buzón de Cartas No Enviadas
+  - name: verses
+    description: Cadáver Exquisito - Versos comunitarios
+  - name: newsletter
+    description: Newsletter subscription
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /letters:
+    post:
+      operationId: submitLetter
+      tags: [letters]
+      summary: Submit an anonymous letter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitLetterRequest"
+      responses:
+        "201":
+          description: Letter submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitLetterResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      operationId: getLetters
+      tags: [letters]
+      summary: Get recent letters (public, anonymous)
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: List of letters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LettersListResponse"
+
+  /verses:
+    post:
+      operationId: submitVerse
+      tags: [verses]
+      summary: Submit a verse for Cadáver Exquisito
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitVerseRequest"
+      responses:
+        "201":
+          description: Verse submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitVerseResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      operationId: getVerses
+      tags: [verses]
+      summary: Get verses for the collective poem
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of verses
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VersesListResponse"
+
+  /newsletter:
+    post:
+      operationId: subscribeNewsletter
+      tags: [newsletter]
+      summary: Subscribe to newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewsletterSubscribeRequest"
+      responses:
+        "201":
+          description: Subscribed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NewsletterSubscribeResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    SubmitLetterRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 10
+        mood:
+          type: string
+          enum: [amor, duelo, esperanza, rabia, nostalgia]
+      required:
+        - content
+
+    SubmitLetterResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - message
+        - createdAt
+
+    Letter:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        mood:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - content
+        - createdAt
+
+    LettersListResponse:
+      type: object
+      properties:
+        letters:
+          type: array
+          items:
+            $ref: "#/components/schemas/Letter"
+        total:
+          type: integer
+      required:
+        - letters
+        - total
+
+    SubmitVerseRequest:
+      type: object
+      properties:
+        verse:
+          type: string
+          minLength: 3
+          maxLength: 500
+        author:
+          type: string
+          maxLength: 100
+      required:
+        - verse
+
+    SubmitVerseResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - message
+        - createdAt
+
+    Verse:
+      type: object
+      properties:
+        id:
+          type: integer
+        verse:
+          type: string
+        author:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - verse
+        - createdAt
+
+    VersesListResponse:
+      type: object
+      properties:
+        verses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Verse"
+        total:
+          type: integer
+      required:
+        - verses
+        - total
+
+    NewsletterSubscribeRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+          maxLength: 100
+      required:
+        - email
+
+    NewsletterSubscribeResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        subscribed:
+          type: boolean
+      required:
+        - message
+        - subscribed
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: string
+      required:
+        - error
