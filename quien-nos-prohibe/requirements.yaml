@@ -1,0 +1,24 @@
+packages:
+  "framer-motion": "For sophisticated scroll-triggered and page-load animations"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes without style conflicts"
+  "react-hook-form": "Robust form state management for letters, verses, and newsletter"
+  "@hookform/resolvers": "Zod integration for form validation"
+  "zod": "Schema validation for forms"
+  "sonner": "Elegant and minimal toast notifications for successful actions"
+
+images:
+  - path: "artifacts/quien-nos-prohibe/public/images/hero-bg.png"
+    description: "Moody, dark vintage black and white artistic photo of the San Francisco Golden Gate Bridge wrapped in deep fog. High contrast, cinematic noir style, dramatic lighting, empty and melancholic. Film grain texture."
+    aspect_ratio: "16:9"
+  - path: "artifacts/quien-nos-prohibe/public/images/author-portrait.png"
+    description: "Dark, moody, vintage editorial portrait of a young immigrant woman writer in shadows. Black and white with high contrast, heavy film grain, mysterious, looking slightly away from the camera. Rough edges."
+    aspect_ratio: "3:4"
+  - path: "artifacts/quien-nos-prohibe/public/images/paper-texture.png"
+    description: "A solid abstract background of old, crumpled, slightly stained vintage cream paper texture. High detail, rough surface, subtle dark edges."
+    aspect_ratio: "16:9"
+
+notes:
+  - "The frontend relies on the @workspace/api-client-react package for API hooks."
+  - "The design uses a custom 'Guerrilla Elegance' theme with heavy CSS styling, transforming the default Tailwind look."
+  - "Forms use standard react-hook-form + zod to ensure validation matches API requirements."
